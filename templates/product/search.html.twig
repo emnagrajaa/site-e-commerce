@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche de produits{% endblock %}
+
+{% block body %}
+    <h1>Recherche de produits</h1>
+    <form method="get" action="{{ path('app_product_search') }}" class="mb-4">
+        <input type="text" name="q" value="{{ query }}" placeholder="Rechercher un produit..." class="form-control d-inline-block w-auto">
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    {% if product.image %}
+                        <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|slice(0, 100) }}...</p>
+                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-primary">Voir</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucun produit trouvé.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
