@@ -18,10 +18,6 @@
         </button>
         <div class="collapse navbar-nav" id="navbarNav">
             <a class="nav-link" href="{{ path('app_category_index') }}">Catégories</a>
-            <a class="nav-link" href="{{ path('app_product_search') }}">Recherche</a>
-            {% if is_granted('ROLE_ADMIN') %}
-                <a class="nav-link" href="{{ path('app_product_new') }}">Ajouter un produit</a>
-            {% endif %}
         </div>
     </div>
 </nav>
