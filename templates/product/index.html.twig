@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des produits{% endblock %}
+
+{% block body %}
+    <h1>Liste des produits</h1>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    {% if product.image %}
+                        <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|slice(0, 100) }}...</p>
+                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-primary">Voir</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucun produit trouvé.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

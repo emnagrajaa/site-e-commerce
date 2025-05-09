@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ product.name }}</h1>
+    <div class="card">
+        {% if product.image %}
+            <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
+        {% endif %}
+        <div class="card-body">
+            <p class="card-text">{{ product.description }}</p>
+            <p class="card-text"><strong>Prix :</strong> {{ product.price }} €</p>
+            <p class="card-text"><strong>Stock :</strong> {{ product.stock }}</p>
+            <p class="card-text"><strong>Catégorie :</strong> {{ product.category.name }}</p>
+            <a href="{{ path('app_product_index') }}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
+{% endblock %}
