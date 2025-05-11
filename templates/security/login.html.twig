@@ -4,6 +4,13 @@
 
 {% block body %}
     <h1>Connexion</h1>
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for message in app.session.flashBag.get('success') %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
@@ -15,6 +22,10 @@
         <div class="mb-3">
             <label for="inputPassword" class="form-label">Mot de passe</label>
             <input type="password" name="password" id="inputPassword" class="form-control" required>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="_remember_me" id="rememberMe" class="form-check-input">
+            <label for="rememberMe" class="form-check-label">Se souvenir de moi</label>
         </div>
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <button class="btn btn-primary" type="submit">Se connecter</button>
