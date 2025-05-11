@@ -23,7 +23,6 @@ class Cart
     #[ORM\JoinTable(name: 'cart_product')]
     #[ORM\JoinColumn(name: 'cart_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'product_id', referencedColumnName: 'id')]
-    #[ORM\JoinTableColumn(name: 'quantity', type: 'integer', nullable: false)]
     private Collection $products;
 
     public function __construct()

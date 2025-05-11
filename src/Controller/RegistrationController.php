@@ -21,21 +21,17 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hash the password
+            // Hash the plain password
             $user->setPassword(
-                $passwordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
+                $passwordHasher->hashPassword($user, $user->getPlainPassword())
             );
+            // Clear plainPassword (optional, as eraseCredentials will handle it)
+            $user->setPlainPassword(null);
 
-            // Persist the user
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Add a success message
-            $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
-
+            // Redirect to login or homepage
             return $this->redirectToRoute('app_login');
         }
 
