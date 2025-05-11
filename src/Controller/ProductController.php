@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class ProductController extends AbstractController
 {
@@ -21,8 +22,17 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
+    public function show($id, ProductRepository $productRepository, LoggerInterface $logger): Response
     {
+        $logger->debug("Tentative d'accès au produit ID: ".$id);
+
+        $product = $productRepository->find($id);
+
+        if (!$product) {
+            $logger->error("Produit introuvable - ID: ".$id);
+            throw $this->createNotFoundException('Le produit demandé n\'existe pas');
+        }
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
         ]);
