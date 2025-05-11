@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre panier{% endblock %}
+
+{% block body %}
+    <h1>Votre panier</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix unitaire</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ cart[product.id] }}</td>
+                <td>{{ product.price }} €</td>
+                <td>{{ (product.price * cart[product.id]) }} €</td>
+                <td>
+                    <form action="{{ path('app_cart_remove', {'id': product.id}) }}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3"><strong>Total</strong></td>
+            <td>{{ total }} €</td>
+            <td></td>
+        </tr>
+        </tfoot>
+    </table>
+    {% if products %}
+        <form action="{{ path('app_order_create') }}" method="post">
+            <button type="submit" class="btn btn-success">Passer la commande</button>
+        </form>
+    {% endif %}
+{% endblock %}
