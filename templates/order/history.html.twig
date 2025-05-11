@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes commandes{% endblock %}
+
+{% block body %}
+    <h1>Mes commandes</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Produits</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.createdAt|date('d/m/Y') }}</td>
+                <td>{{ order.total }} €</td>
+                <td>
+                    <ul>
+                        {% for item in order.orderItems %}
+                            <li>{{ item.product.name }} (x{{ item.quantity }})</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

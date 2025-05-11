@@ -17,8 +17,11 @@
         "symfony/form": "7.2.*",
         "symfony/framework-bundle": "7.2.*",
         "symfony/mailer": "7.2.*",
+        "symfony/messenger": "7.2.*",
+        "symfony/notifier": "7.2.*",
         "symfony/runtime": "7.2.*",
         "symfony/security-bundle": "7.2.*",
+        "symfony/translation": "7.2.*",
         "symfony/twig-bundle": "7.2.*",
         "symfony/validator": "7.2.*",
         "symfony/yaml": "7.2.*",
@@ -27,8 +30,12 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.1",
-        "phpunit/phpunit": "^11.5.19",
-        "symfony/maker-bundle": "^1.63"
+        "phpunit/phpunit": "^11.5.20",
+        "symfony/debug-bundle": "7.2.*",
+        "symfony/maker-bundle": "^1.63",
+        "symfony/monolog-bundle": "^3.10",
+        "symfony/stopwatch": "7.2.*",
+        "symfony/web-profiler-bundle": "7.2.*"
     },
     "config": {
         "allow-plugins": {
