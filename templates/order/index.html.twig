@@ -4,6 +4,36 @@
 
 {% block body %}
     <h1>Commande confirmée</h1>
-    <p>Votre commande a été enregistrée avec succès. Vous recevrez un email de confirmation.</p>
-    <a href="{{ path('app_product_index') }}" class="btn btn-primary">Retour aux produits</a>
+
+    <p>Merci pour votre commande ! Un email de confirmation a été envoyé à votre adresse.</p>
+
+    <h2>Récapitulatif</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix unitaire</th>
+            <th>Sous-total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in order.orderItems %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }} €</td>
+                <td>{{ item.quantity * item.product.price }} €</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3"><strong>Total</strong></td>
+            <td>{{ order.total }} €</td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <a href="{{ path('app_product_index') }}" class="btn btn-primary">Continuer mes achats</a>
 {% endblock %}

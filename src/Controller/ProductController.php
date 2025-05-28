@@ -20,17 +20,11 @@ class ProductController extends AbstractController
             'products' => $productRepository->findAll(),
         ]);
     }
-
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show($id, ProductRepository $productRepository, LoggerInterface $logger): Response
+    #[Route('/product/{id}', name: 'app_product_show', requirements: ['id' => '\d+'])]
+    public function show(?Product $product): Response
     {
-        $logger->debug("Tentative d'accès au produit ID: ".$id);
-
-        $product = $productRepository->find($id);
-
         if (!$product) {
-            $logger->error("Produit introuvable - ID: ".$id);
-            throw $this->createNotFoundException('Le produit demandé n\'existe pas');
+            throw $this->createNotFoundException('Produit non trouvé');
         }
 
         return $this->render('product/show.html.twig', [

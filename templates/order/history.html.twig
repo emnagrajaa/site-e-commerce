@@ -4,30 +4,29 @@
 
 {% block body %}
     <h1>Mes commandes</h1>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Produits</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for order in orders %}
+
+    {% if orders is empty %}
+        <p>Vous n'avez pas encore passé de commande.</p>
+    {% else %}
+        <table class="table">
+            <thead>
             <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.createdAt|date('d/m/Y') }}</td>
-                <td>{{ order.total }} €</td>
-                <td>
-                    <ul>
-                        {% for item in order.orderItems %}
-                            <li>{{ item.product.name }} (x{{ item.quantity }})</li>
-                        {% endfor %}
-                    </ul>
-                </td>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Actions</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+                    <td>{{ order.total }} €</td>
+                    <td>
+                        <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-sm btn-primary">Détails</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

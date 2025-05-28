@@ -1,45 +1,72 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Votre panier{% endblock %}
+{% block title %}Votre Panier{% endblock %}
 
 {% block body %}
-    <h1>Votre panier</h1>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Produit</th>
-            <th>Quantité</th>
-            <th>Prix unitaire</th>
-            <th>Total</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
+    <h1>Votre Panier</h1>
+
+    {% for flash_message in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    {% for flash_message in app.flashes('danger') %}
+        <div class="alert alert-danger" role="alert">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+
+    {% if cartItems is empty %}
+        <p class="alert alert-info">Votre panier est vide.</p>
+        <a href="{{ path('app_products') }}" class="btn btn-primary">Retourner aux produits</a>
+    {% else %}
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
             <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ cart[product.id] }}</td>
-                <td>{{ product.price }} €</td>
-                <td>{{ (product.price * cart[product.id]) }} €</td>
+                <th scope="col">Produit</th>
+                <th scope="col">Prix unitaire</th>
+                <th scope="col">Quantité</th>
+                <th scope="col">Sous-total</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in cartItems %}
+                <tr>
+                    <td>{{ item.product.name|default('Produit inconnu') }}</td>
+                    <td>{{ item.product.price|default('N/A') }} €</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <a href="{{ path('app_cart_update', {'id': item.product.id, 'quantity': item.quantity - 1}) }}"
+                               class="btn btn-sm btn-secondary me-2">-</a>
+                            <span>{{ item.quantity }}</span>
+                            <a href="{{ path('app_cart_update', {'id': item.product.id, 'quantity': item.quantity + 1}) }}"
+                               class="btn btn-sm btn-secondary ms-2">+</a>
+                        </div>
+                    </td>
+                    <td>{{ item.subtotal }} €</td>
+                    <td>
+                        <a href="{{ path('app_cart_remove', {'id': item.product.id}) }}"
+                           class="btn btn-sm btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="3" class="text-end"><strong>Total :</strong></td>
+                <td><strong>{{ total }} €</strong></td>
                 <td>
-                    <form action="{{ path('app_cart_remove', {'id': product.id}) }}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                    </form>
+                    <a href="{{ path('app_cart_clear') }}"
+                       class="btn btn-sm btn-warning">Vider le panier</a>
                 </td>
             </tr>
-        {% endfor %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="3"><strong>Total</strong></td>
-            <td>{{ total }} €</td>
-            <td></td>
-        </tr>
-        </tfoot>
-    </table>
-    {% if products %}
-        <form action="{{ path('app_order_create') }}" method="post">
-            <button type="submit" class="btn btn-success">Passer la commande</button>
-        </form>
+            </tfoot>
+        </table>
+
+        <div class="d-flex justify-content-between mt-4">
+
+            <a href="{{ path('app_checkout') }}" class="btn btn-success">Passer la commande</a>
+        </div>
     {% endif %}
 {% endblock %}
