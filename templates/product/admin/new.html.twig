@@ -1,11 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter un produit{% endblock %}
+{% block title %}{% if form.vars.data.id %}Modifier{% else %}Ajouter{% endif %} un produit{% endblock %}
 
 {% block body %}
-    <h1>Ajouter un produit</h1>
+    <h1>{% if form.vars.data.id %}Modifier{% else %}Ajouter{% endif %} un produit</h1>
+
     {{ form_start(form) }}
-    {{ form_widget(form) }}
+    <div class="mb-3">
+        {{ form_row(form.name, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_row(form.description, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_row(form.price, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_row(form.stock, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_row(form.category, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    <div class="mb-3">
+        {{ form_row(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+    </div>
     <button type="submit" class="btn btn-primary">Enregistrer</button>
     {{ form_end(form) }}
+
+    <a href="{{ path('app_product_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
 {% endblock %}

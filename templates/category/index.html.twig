@@ -1,21 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des catégories{% endblock %}
+{% block title %}Catégories{% endblock %}
 
 {% block body %}
-    <h1>Liste des catégories</h1>
-    <div class="row">
-        {% for category in categories %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ category.name }}</h5>
-                        <a href="{{ path('app_category_show', {'id': category.id}) }}" class="btn btn-primary">Voir les produits</a>
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            <p>Aucune catégorie trouvée.</p>
-        {% endfor %}
-    </div>
+    <h1>Catégories</h1>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_category_new') }}" class="btn btn-primary mb-3">Ajouter une catégorie</a>
+    {% endif %}
+
+    {% if categories is empty %}
+        <p>Aucune catégorie disponible.</p>
+    {% else %}
+        <ul class="list-group">
+            {% for category in categories %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_product_index', {'category': category.id}) }}">{{ category.name }}</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div>
+                            <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                            <form action="{{ path('app_category_delete', {'id': category.id}) }}" method="post" class="d-inline">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

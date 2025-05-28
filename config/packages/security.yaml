@@ -1,7 +1,6 @@
 security:
     password_hashers:
-        App\Entity\User:
-            algorithm: auto
+        App\Entity\User: 'auto'
     providers:
         app_user_provider:
             entity:
@@ -17,8 +16,13 @@ security:
             custom_authenticator: App\Security\AppAuthenticator
             logout:
                 path: app_logout
-                target: app_product_index
+            entry_point: App\Security\AppAuthenticator
+            form_login:
+                login_path: app_login
+                check_path: app_login
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }

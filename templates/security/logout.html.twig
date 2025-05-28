@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Déconnexion{% endblock %}
+
+{% block body %}
+    <h1>Déconnexion</h1>
+
+    <div class="alert alert-success">
+        Vous avez été déconnecté avec succès.
+    </div>
+
+    <p>
+        <a href="{{ path('app_login') }}" class="btn btn-primary">Se connecter</a>
+        <a href="{{ path('app_product_index') }}" class="btn btn-secondary">Retour à l'accueil</a>
+    </p>
+{% endblock %}

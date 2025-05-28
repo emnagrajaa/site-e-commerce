@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -104,5 +104,9 @@ class User
     public function getCarts(): Collection
     {
         return $this->carts;
+    }
+    public function eraseCredentials(): void
+    {
+        $this->plainPassword = null;
     }
 }

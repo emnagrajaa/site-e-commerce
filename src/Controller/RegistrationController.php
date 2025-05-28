@@ -14,29 +14,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hash the plain password
+            // Encode the plain password
             $user->setPassword(
-                $passwordHasher->hashPassword($user, $user->getPlainPassword())
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
             );
-            // Clear plainPassword (optional, as eraseCredentials will handle it)
-            $user->setPlainPassword(null);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Redirect to login or homepage
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_product_index');
         }
 
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 }
