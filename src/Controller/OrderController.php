@@ -62,7 +62,7 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/checkout', name: 'app_checkout', methods: ['POST'])]
+    #[Route('/checkout', name: 'app_checkout', methods: ['GET','POST'])]
     public function checkout(CartService $cartService, StockService $stockService, EmailService $emailService, EntityManagerInterface $em, ProductRepository $productRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -104,4 +104,10 @@ class OrderController extends AbstractController
         $this->addFlash('success', 'Commande passée avec succès !');
         return $this->redirectToRoute('app_order_confirmation'); // Redirect to a confirmation page
     }
+    #[Route('/confirmation', name: 'app_order_confirmation', methods: ['GET'])]
+    public function confirmation(): Response
+    {
+        return $this->render('order/confirmation.html.twig');
+    }
+
 }

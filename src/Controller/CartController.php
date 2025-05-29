@@ -56,7 +56,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('app_cart_index');
     }
 
-    #[Route('/remove/{id}', name: 'app_cart_remove', methods: ['POST'])]
+    #[Route('/remove/{id}', name: 'app_cart_remove', methods: ['GET' ,'POST'])]
     public function remove(Product $product): Response
     {
         $user = $this->getUser();
@@ -88,7 +88,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('app_cart_index');
     }
 
-    #[Route('/clear', name: 'app_cart_clear', methods: ['POST'])]
+    #[Route('/clear', name: 'app_cart_clear', methods: ['GET','POST'])]
     public function clear(): Response
     {
         $user = $this->getUser();
