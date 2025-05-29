@@ -13,7 +13,6 @@
             <tr>
                 <th>Date</th>
                 <th>Total</th>
-                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -21,12 +20,13 @@
                 <tr>
                     <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
                     <td>{{ order.total }} €</td>
-                    <td>
-                        <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-sm btn-primary">Détails</a>
-                    </td>
+
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        <a href="{{ path('app_product_index') }}" class="btn btn-primary">
+            Continuer mes achats
+        </a>
     {% endif %}
 {% endblock %}
