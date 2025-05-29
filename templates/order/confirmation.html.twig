@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order Confirmation{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="alert alert-success">
+            <h2>Merci pour votre commande !</h2>
+            <p>Votre commande a été passée avec succès. Nous avons envoyé une confirmation à votre adresse e-mail.</p>
+        </div>
+        <a href="{{ path('app_order_history') }}" class="btn btn-primary">
+            Voir l'historique des commandes
+        </a>
+    </div>
+{% endblock %}

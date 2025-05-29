@@ -18,7 +18,7 @@
 
     {% if cartItems is empty %}
         <p class="alert alert-info">Votre panier est vide.</p>
-        <a href="{{ path('app_products') }}" class="btn btn-primary">Retourner aux produits</a>
+        <a href="{{ path('app_product_index') }}" class="btn btn-primary">Retourner aux produits</a>
     {% else %}
         <table class="table table-striped table-hover">
             <thead class="thead-dark">
