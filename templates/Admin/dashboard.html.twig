@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de Bord Admin{% endblock %}
+
+{% block body %}
+    <h1>Tableau de Bord Administrateur</h1>
+    <p>Bienvenue, {{ app.user.email }} ! Vous êtes un administrateur.</p>
+    <ul>
+        <li><a href="{{ path('admin_product_new') }}">Ajouter un produit</a></li>
+    </ul>
+
+    <h2>Liste des Produits</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>
+                    <a href="{{ path('admin_product_edit', {'id': product.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun produit trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_products') }}" class="btn btn-secondary mt-3">Retour à la liste complète</a>
+    
+
+{% endblock %}
