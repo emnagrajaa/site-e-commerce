@@ -1,28 +1,74 @@
 security:
     password_hashers:
-        App\Entity\User: 'auto'
+        App\Entity\User:
+            algorithm: auto
+        App\Entity\Admin:
+            algorithm: auto
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+        admin_provider:
+            entity:
+                class: App\Entity\Admin
+                property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        admin:
+            pattern: ^/admin
+            provider: admin_provider
+            context: admin_context
+            custom_authenticator: App\Security\AppAuthenticator
+            entry_point: App\Security\AppAuthenticator
+            form_login:
+                login_path: app_admin_login
+                check_path: app_admin_login
+                default_target_path: app_admin_dashboard
+                enable_csrf: true
+            logout:
+                path: app_admin_logout
+                target: app_login
+                invalidate_session: false
         main:
+            pattern: ^/
             lazy: true
             provider: app_user_provider
+            context: admin_context
             custom_authenticator: App\Security\AppAuthenticator
             logout:
                 path: app_logout
+                target: app_login
+                invalidate_session: false
             entry_point: App\Security\AppAuthenticator
             form_login:
                 login_path: app_login
                 check_path: app_login
+                default_target_path: app_product_index
+                enable_csrf: true
+                use_referer: true
+
     access_control:
+        # Public routes
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/logout, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+
+        # Admin-only routes (must come first)
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/category/new, roles: ROLE_ADMIN }
+        - { path: ^/category/\d+/edit, roles: ROLE_ADMIN }
+        - { path: ^/category/\d+/delete, roles: ROLE_ADMIN }
+
+        # Category routes accessible to both roles
+        - { path: ^/category/\d+, roles: [ ROLE_USER, ROLE_ADMIN ] }  # Show action
+        - { path: ^/category/$, roles: [ ROLE_USER, ROLE_ADMIN ] }    # List view
+
+        # User-accessible routes
+        - { path: ^/cart, roles: ROLE_USER }
+
+        # Default rule (must be last)
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

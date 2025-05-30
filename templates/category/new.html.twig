@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une Catégorie{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .custom-input {
+            border: 2px solid #ff4500; /* Bordure orange */
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+        }
+        .custom-button {
+            background-color: #ff4500; /* Orange */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .custom-button:hover {
+            background-color: #e03a00; /* Orange foncé au survol */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Ajouter une Catégorie</h1>
+
+    {{ form_start(form) }}
+    <div class="mb-3">
+        {{ form_label(form.name, 'Nom de la catégorie', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.name) }} <!-- Les classes sont déjà dans CategoryType -->
+        {{ form_errors(form.name) }}
+    </div>
+
+    {{ form_widget(form.save) }} <!-- Les classes sont déjà dans CategoryType -->
+    <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Annuler</a>
+    {{ form_end(form) }}
+{% endblock %}

@@ -3,31 +3,47 @@
 {% block title %}Catégories{% endblock %}
 
 {% block body %}
-    <h1>Catégories</h1>
+    <div class="container my-4">
+        <h1 class="mb-4">Catégories</h1>
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_category_new') }}" class="btn btn-primary mb-3">Ajouter une catégorie</a>
-    {% endif %}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
 
-    {% if categories is empty %}
-        <p>Aucune catégorie disponible.</p>
-    {% else %}
-        <ul class="list-group">
-            {% for category in categories %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="{{ path('app_product_index', {'category': category.id}) }}">{{ category.name }}</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <div>
-                            <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
-                            <form action="{{ path('app_category_delete', {'id': category.id}) }}" method="post" class="d-inline">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-                            </form>
-                        </div>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_category_new') }}" class="btn btn-primary mb-4">Ajouter une catégorie</a>
+        {% endif %}
+
+        {% if categories is empty %}
+            <div class="alert alert-info" role="alert">
+                Aucune catégorie disponible.
+            </div>
+        {% else %}
+            <ul class="list-group list-group-flush">
+                {% for category in categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                        <a href="{{ path('app_category_show', {'id': category.id}) }}" class="text-decoration-none fs-5">{{ category.name }}</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <div class="btn-group" role="group">
+                                <a href="{{ path('app_category_edit', {'id': category.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                                <form action="{{ path('app_category_delete', {'id': category.id}) }}" method="post" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 {% endblock %}

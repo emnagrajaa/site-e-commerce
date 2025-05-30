@@ -3,27 +3,38 @@
 {% block title %}Recherche de produits{% endblock %}
 
 {% block body %}
-    <h1>Recherche de produits</h1>
-    <form method="get" action="{{ path('app_product_search') }}" class="mb-4">
-        <input type="text" name="q" value="{{ query }}" placeholder="Rechercher un produit..." class="form-control d-inline-block w-auto">
-        <button type="submit" class="btn btn-primary">Rechercher</button>
-    </form>
-    <div class="row">
-        {% for product in products %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    {% if product.image %}
-                        <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <p class="card-text">{{ product.description|slice(0, 100) }}...</p>
-                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-primary">Voir</a>
-                    </div>
-                </div>
+    <div class="container my-4">
+        <h1 class="mb-4 text-primary">Recherche de produits</h1>
+        <form method="get" action="{{ path('app_product_search') }}" class="mb-4">
+            <div class="input-group w-50">
+                <input type="text" name="q" value="{{ query }}" placeholder="Rechercher un produit..." class="form-control">
+                <button type="submit" class="btn btn-success">Rechercher</button>
+            </div>
+        </form>
+        {% if products is empty %}
+            <div class="alert alert-warning" role="alert">
+                Aucun produit trouvé.
             </div>
         {% else %}
-            <p>Aucun produit trouvé.</p>
-        {% endfor %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for product in products %}
+                    <div class="col">
+                        <div class="card h-100">
+                            {% if product.image %}
+                                <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="{{ asset('images/placeholder.jpg') }}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="Placeholder">
+                            {% endif %}
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-dark">{{ product.name }}</h5>
+                                <p class="card-text text-muted flex-grow-1">{{ product.description|slice(0, 100) }}...</p>
+                                <p class="card-text"><strong>{{ product.price }} €</strong></p>
+                                <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-primary mt-auto">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
