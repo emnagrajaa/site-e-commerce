@@ -1,18 +1,110 @@
 {% extends 'base.html.twig' %}
 
-  {% block title %}Modifier la Catégorie{% endblock %}
+{% block title %}Modifier la Catégorie{% endblock %}
 
-  {% block body %}
-      <h1>Modifier la Catégorie</h1>
+{% block body %}
+    <style>
+        /* Style cohérent avec le tableau de bord */
+        .edit-container {
+            background: linear-gradient(135deg, #a1c4fd 0%, #0052cc 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
 
-      {{ form_start(form) }}
-      <div class="mb-3">
-          {{ form_label(form.name, 'Nom de la catégorie', {'label_attr': {'class': 'form-label'}}) }}
-          {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-          {{ form_errors(form.name) }}
-      </div>
+        .edit-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0, 82, 204, 0.15);
+            border: 1px solid #4dabf7;
+        }
 
-      {{ form_widget(form.save) }} <!-- Rendre le bouton défini dans CategoryType -->
-      <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Annuler</a>
-      {{ form_end(form) }}
-  {% endblock %}
+        h1 {
+            color: #004085;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Style du formulaire */
+        .form-control {
+            border: 2px solid #4dabf7;
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus {
+            border-color: #0052cc;
+            box-shadow: 0 0 0 0.25rem rgba(0, 82, 204, 0.25);
+        }
+
+        /* Bouton Enregistrer en vert */
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* Bouton Annuler en bleu */
+        .btn-cancel {
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: #0052cc;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .edit-container {
+                padding: 20px;
+            }
+
+            .edit-card {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-save, .btn-cancel {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="edit-container">
+        <div class="edit-card">
+            <h1>Modifier la Catégorie</h1>
+
+            {{ form_start(form) }}
+            <div class="mb-4">
+                {{ form_label(form.name, 'Nom de la catégorie', {'label_attr': {'class': 'form-label mb-2'}}) }}
+                {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.name) }}
+            </div>
+
+            <div class="d-flex gap-3 button-group">
+
+                <a href="{{ path('app_category_index') }}" class="btn btn-cancel">Annuler</a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

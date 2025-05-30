@@ -3,70 +3,252 @@
 {% block title %}Votre Panier{% endblock %}
 
 {% block body %}
-    <h1>Votre Panier</h1>
+    <style>
+        /* Style global */
+        .cart-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+        }
 
-    {% for flash_message in app.flashes('success') %}
-        <div class="alert alert-success" role="alert">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
-    {% for flash_message in app.flashes('danger') %}
-        <div class="alert alert-danger" role="alert">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
+        /* Titre */
+        .cart-title {
+            color: #004085;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 15px;
+        }
 
-    {% if cartItems is empty %}
-        <p class="alert alert-info">Votre panier est vide.</p>
-        <a href="{{ path('app_product_index') }}" class="btn btn-primary">Retourner aux produits</a>
-    {% else %}
-        <table class="table table-striped table-hover">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">Produit</th>
-                <th scope="col">Prix unitaire</th>
-                <th scope="col">Quantité</th>
-                <th scope="col">Sous-total</th>
-                <th scope="col">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in cartItems %}
-                <tr>
-                    <td>{{ item.product.name|default('Produit inconnu') }}</td>
-                    <td>{{ item.product.price|default('N/A') }} €</td>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <a href="{{ path('app_cart_update', {'id': item.product.id, 'quantity': item.quantity - 1}) }}"
-                               class="btn btn-sm btn-secondary me-2">-</a>
-                            <span>{{ item.quantity }}</span>
-                            <a href="{{ path('app_cart_update', {'id': item.product.id, 'quantity': item.quantity + 1}) }}"
-                               class="btn btn-sm btn-secondary ms-2">+</a>
-                        </div>
-                    </td>
-                    <td>{{ item.subtotal }} €</td>
-                    <td>
-                        <a href="{{ path('app_cart_remove', {'id': item.product.id}) }}"
-                           class="btn btn-sm btn-danger">Supprimer</a>
-                    </td>
-                </tr>
+        .cart-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #66b0ff 0%, #004085 100%);
+        }
+
+        /* Alertes */
+        .alert {
+            border-radius: 8px;
+        }
+
+        /* Tableau */
+        .cart-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .table-header {
+            background: linear-gradient(90deg, #004085 0%, #0052cc 100%);
+            color: white;
+        }
+
+        .table th {
+            border: none;
+            padding: 15px;
+        }
+
+        .table td {
+            vertical-align: middle;
+            padding: 15px;
+            border-color: #eee;
+        }
+
+        /* Boutons quantité */
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50% !important;
+            padding: 0;
+        }
+
+        .quantity-value {
+            min-width: 40px;
+            text-align: center;
+            display: inline-block;
+        }
+
+        /* Boutons actions */
+        .btn-remove {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-remove:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .btn-clear {
+            background-color: #ffc107;
+            color: #212529;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear:hover {
+            background-color: #e0a800;
+            transform: translateY(-1px);
+        }
+
+        .btn-checkout {
+            background: linear-gradient(90deg, #28a745 0%, #218838 100%);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-checkout:hover {
+            background: linear-gradient(90deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-continue {
+            background: linear-gradient(90deg, #4dabf7 0%, #0052cc 100%);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-continue:hover {
+            background: linear-gradient(90deg, #3a9cf5 0%, #004085 100%);
+            transform: translateY(-2px);
+        }
+
+        /* Total */
+        .total-row {
+            background-color: #f8f9fa;
+            font-size: 1.1rem;
+        }
+
+        /* Panier vide */
+        .empty-cart {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-container {
+                padding: 30px 15px;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .d-flex-actions {
+                flex-direction: column;
+                gap: 15px !important;
+            }
+
+            .btn-checkout, .btn-continue {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="cart-container">
+        <div class="container">
+            <h1 class="cart-title">Votre Panier</h1>
+
+            {% for flash_message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ flash_message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="3" class="text-end"><strong>Total :</strong></td>
-                <td><strong>{{ total }} €</strong></td>
-                <td>
-                    <a href="{{ path('app_cart_clear') }}"
-                       class="btn btn-sm btn-warning">Vider le panier</a>
-                </td>
-            </tr>
-            </tfoot>
-        </table>
+            {% for flash_message in app.flashes('danger') %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ flash_message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
 
-        <div class="d-flex justify-content-between mt-4">
+            {% if cartItems is empty %}
+                <div class="empty-cart">
+                    <p class="fs-4 mb-4">Votre panier est vide</p>
+                    <a href="{{ path('app_product_index') }}" class="btn btn-continue btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Retourner aux produits
+                    </a>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table cart-table">
+                        <thead class="table-header">
+                        <tr>
+                            <th scope="col">Produit</th>
+                            <th scope="col">Prix unitaire</th>
+                            <th scope="col">Quantité</th>
+                            <th scope="col">Sous-total</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in cartItems %}
+                            <tr>
+                                <td>{{ item.product.name|default('Produit inconnu') }}</td>
+                                <td>{{ item.product.price|default('N/A') }} €</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <a href="{{ path('app_cart_update', {'id': item.product.id, 'quantity': item.quantity - 1}) }}"
+                                           class="btn btn-sm btn-secondary quantity-btn me-2">-</a>
+                                        <span class="quantity-value">{{ item.quantity }}</span>
+                                        <a href="{{ path('app_cart_update', {'id': item.product.id, 'quantity': item.quantity + 1}) }}"
+                                           class="btn btn-sm btn-secondary quantity-btn ms-2">+</a>
+                                    </div>
+                                </td>
+                                <td>{{ item.subtotal }} €</td>
+                                <td>
+                                    <a href="{{ path('app_cart_remove', {'id': item.product.id}) }}"
+                                       class="btn btn-sm btn-remove">
+                                        <i class="fas fa-trash-alt me-1"></i>Supprimer
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr class="total-row">
+                            <td colspan="3" class="text-end fw-bold">Total :</td>
+                            <td class="fw-bold">{{ total }} €</td>
+                            <td>
+                                <a href="{{ path('app_cart_clear') }}"
+                                   class="btn btn-sm btn-clear">
+                                    <i class="fas fa-broom me-1"></i>Vider le panier
+                                </a>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
 
-            <a href="{{ path('app_checkout') }}" class="btn btn-success">Passer la commande</a>
+                <div class="d-flex justify-content-between mt-4 d-flex-actions">
+                    <a href="{{ path('app_product_index') }}" class="btn btn-continue">
+                        <i class="fas fa-arrow-left me-2"></i>Continuer mes achats
+                    </a>
+                    <a href="{{ path('app_checkout') }}" class="btn btn-checkout">
+                        <i class="fas fa-credit-card me-2"></i>Passer la commande
+                    </a>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
 {% endblock %}
