@@ -3,43 +3,150 @@
 {% block title %}Tableau de Bord Admin{% endblock %}
 
 {% block body %}
-    <h1>Tableau de Bord Administrateur</h1>
-    <p>Bienvenue, {{ app.user.email }} ! Vous êtes un administrateur.</p>
-    <ul>
-        <li><a href="{{ path('admin_product_new') }}">Ajouter un produit</a></li>
-    </ul>
+    <style>
+        /* Blue gradient background for the container */
+        .dashboard-container {
+            background: linear-gradient(135deg, #a1c4fd 0%, #0052cc 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    <h2>Liste des Produits</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.name }}</td>
-                <td>
-                    <a href="{{ path('admin_product_edit', {'id': product.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    <form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
-                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">Aucun produit trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        /* Card styling for the dashboard */
+        .dashboard-card {
+            background: #ffffff;
+            border: 1px solid #4dabf7;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 82, 204, 0.2);
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
 
-    <a href="{{ path('admin_products') }}" class="btn btn-secondary mt-3">Retour à la liste complète</a>
-    
+        /* Header styling */
+        h1, h2 {
+            color: #004085;
+        }
 
+        /* Welcome message */
+        .welcome-message {
+            color: #004085;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
+        .table {
+            background: #f8fbff;
+            border: 1px solid #66b0ff;
+        }
+
+        .table th {
+            background: linear-gradient(90deg, #4dabf7 0%, #0052cc 100%);
+            color: white;
+            border: none;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        /* Action buttons */
+        .btn-modify {
+            background: #4dabf7; /* Blue */
+            color: white;
+            border: none;
+            transition: background 0.3s ease;
+        }
+
+        .btn-modify:hover {
+            background: #0052cc; /* Darker blue */
+        }
+
+        .btn-delete {
+            background: #28a745; /* Green */
+            color: white;
+            border: none;
+            transition: background 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #218838; /* Darker green */
+        }
+
+        /* Add product button with blue gradient */
+        .btn-add {
+            background: linear-gradient(90deg, #66b0ff 0%, #004085 100%);
+            color: white;
+            border: none;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(90deg, #4dabf7 0%, #003d99 100%);
+        }
+
+        /* Back button with adjusted blue gradient */
+        .btn-back {
+            background: linear-gradient(90deg, #66b0ff 0%, #004085 100%);
+            color: white;
+            border: none;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(90deg, #4dabf7 0%, #003d99 100%);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .dashboard-card {
+                margin: 10px;
+            }
+        }
+    </style>
+
+    <div class="dashboard-container">
+        <div class="dashboard-card">
+            <h1 class="text-center mb-4">Tableau de Bord Administrateur</h1>
+            <p class="welcome-message">Bienvenue, ! Vous êtes un administrateur.</p>
+
+            <div class="mb-4">
+                <a href="{{ path('admin_product_new') }}" class="btn btn-add">Ajouter un produit</a>
+            </div>
+
+            <h2>Liste des Produits</h2>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>
+                            <a href="{{ path('admin_product_edit', {'id': product.id}) }}" class="btn btn-modify btn-sm">Modifier</a>
+                            <form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                                <input type="hidden" name="_token FET HEAD value="{{ csrf_token('delete' ~ product.id) }}">
+                                <button type="submit" class="btn btn-delete btn-sm">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">Aucun produit trouvé</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <a href="{{ path('admin_products') }}" class="btn btn-back mt-3">Retour à la liste complète</a>
+        </div>
+    </div>
 {% endblock %}
