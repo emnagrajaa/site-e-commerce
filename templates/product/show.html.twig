@@ -3,32 +3,196 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
-    <h1>{{ product.name }}</h1>
+    <style>
+        /* Style global */
+        .product-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+        }
 
-    <div class="row">
-        <div class="col-md-6">
-            {% if product.image %}
-                <img src="{{ asset('uploads/images/' ~ product.image) }}" class="img-fluid" alt="{{ product.name }}">
-            {% else %}
-                <img src="{{ asset('images/placeholder.jpg') }}" class="img-fluid" alt="Placeholder">
-            {% endif %}
-        </div>
-        <div class="col-md-6">
-            <p><strong>Prix :</strong> {{ product.price }} €</p>
-            <p><strong>Description :</strong> {{ product.description }}</p>
-            <p><strong>Stock :</strong> {{ product.stock }} unités</p>
-            <p><strong>Catégorie :</strong> {{ product.category ? product.category.name : 'Aucune' }}</p>
+        /* Titre */
+        .product-title {
+            color: #004085;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 15px;
+        }
 
-            {% if product.stock > 0 %}
-                <form action="{{ path('app_cart_add', {'id': product.id}) }}" method="post" class="mt-3">
-                    <div class="input-group w-50">
-                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control">
-                        <button type="submit" class="btn btn-success">Ajouter au panier</button>
+        .product-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #66b0ff 0%, #004085 100%);
+        }
+
+        /* Contenu produit */
+        .product-content {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        /* Image produit */
+        .product-image {
+            border-radius: 8px;
+            object-fit: contain;
+            max-height: 400px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eee;
+        }
+
+        /* Détails produit */
+        .product-details {
+            padding-left: 30px;
+        }
+
+        .detail-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            color: #004085;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #495057;
+            font-size: 1.1rem;
+        }
+
+        .price-value {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        /* Formulaire panier */
+        .cart-form {
+            margin-top: 30px;
+        }
+
+        .quantity-input {
+            border: 2px solid #4dabf7;
+            border-radius: 8px 0 0 8px !important;
+            padding: 10px 15px;
+            text-align: center;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(90deg, #28a745 0%, #218838 100%);
+            border: none;
+            border-radius: 0 8px 8px 0 !important;
+            padding: 10px 25px;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background: linear-gradient(90deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-1px);
+        }
+
+        .out-of-stock {
+            color: #dc3545;
+            font-weight: 500;
+            padding: 15px;
+            background: #f8d7da;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-container {
+                padding: 30px 15px;
+            }
+
+            .product-details {
+                padding-left: 0;
+                margin-top: 30px;
+            }
+
+            .product-title {
+                font-size: 1.8rem;
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+
+    <div class="product-container">
+        <div class="container">
+            <h1 class="product-title">{{ product.name }}</h1>
+
+            <div class="product-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        {% if product.image %}
+                            <img src="{{ asset('uploads/images/' ~ product.image) }}"
+                                 class="product-image img-fluid"
+                                 alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{{ asset('images/placeholder.jpg') }}"
+                                 class="product-image img-fluid"
+                                 alt="Image non disponible">
+                        {% endif %}
                     </div>
-                </form>
-            {% else %}
-                <p class="text-danger">Produit en rupture de stock.</p>
-            {% endif %}
+                    <div class="col-md-6 product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Prix</span>
+                            <span class="detail-value price-value">{{ product.price }} €</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Description</span>
+                            <span class="detail-value">{{ product.description }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Stock disponible</span>
+                            <span class="detail-value">{{ product.stock }} unités</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Catégorie</span>
+                            <span class="detail-value">{{ product.category ? product.category.name : 'Aucune catégorie' }}</span>
+                        </div>
+
+                        {% if product.stock > 0 %}
+                            <form action="{{ path('app_cart_add', {'id': product.id}) }}" method="post" class="cart-form">
+                                <div class="input-group">
+                                    <input type="number"
+                                           name="quantity"
+                                           value="1"
+                                           min="1"
+                                           max="{{ product.stock }}"
+                                           class="form-control quantity-input"
+                                           aria-label="Quantité">
+                                    <button type="submit" class="btn btn-success add-to-cart-btn">
+                                        <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
+                                    </button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <div class="out-of-stock">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                Produit en rupture de stock
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
