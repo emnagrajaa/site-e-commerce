@@ -6,6 +6,9 @@
 parameters:
 
 services:
+    security.authentication.session_strategy:
+        class: Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy
+        arguments: [ 'none' ]
     App\Service\CartService:
         autowire: true
     # default configuration for services in *this* file

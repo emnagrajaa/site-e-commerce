@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+  {% block title %}Modifier la Catégorie{% endblock %}
+
+  {% block body %}
+      <h1>Modifier la Catégorie</h1>
+
+      {{ form_start(form) }}
+      <div class="mb-3">
+          {{ form_label(form.name, 'Nom de la catégorie', {'label_attr': {'class': 'form-label'}}) }}
+          {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+          {{ form_errors(form.name) }}
+      </div>
+
+      {{ form_widget(form.save) }} <!-- Rendre le bouton défini dans CategoryType -->
+      <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Annuler</a>
+      {{ form_end(form) }}
+  {% endblock %}
